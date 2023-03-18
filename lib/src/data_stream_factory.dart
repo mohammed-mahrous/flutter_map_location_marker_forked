@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_compass/flutter_compass.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import 'current_location_layer.dart';
 import 'data.dart';
@@ -20,14 +21,15 @@ class LocationMarkerDataStreamFactory {
   /// Cast to a position stream from
   /// [geolocator](https://pub.dev/packages/geolocator) stream.
   Stream<LocationMarkerPosition?> fromGeolocatorPositionStream({
-    Stream<Position?>? stream,
+    Stream<LocationData?>? stream,
   }) {
-    return (stream ?? defaultPositionStreamSource()).map((Position? position) {
+    return (stream ?? defaultPositionStreamSource())
+        .map((LocationData? position) {
       return position != null
           ? LocationMarkerPosition(
-              latitude: position.latitude,
-              longitude: position.longitude,
-              accuracy: position.accuracy,
+              latitude: position.latitude!,
+              longitude: position.longitude!,
+              accuracy: position.accuracy!,
             )
           : null;
     });
@@ -37,7 +39,7 @@ class LocationMarkerDataStreamFactory {
   /// [geolocator](https://pub.dev/packages/geolocator) stream.
   @Deprecated('Use fromGeolocatorPositionStream instead')
   Stream<LocationMarkerPosition?> geolocatorPositionStream({
-    Stream<Position?>? stream,
+    Stream<LocationData?>? stream,
   }) =>
       fromGeolocatorPositionStream(
         stream: stream,
@@ -45,36 +47,33 @@ class LocationMarkerDataStreamFactory {
 
   /// Create a position stream which is used as default value of
   /// [CurrentLocationLayer.positionStream].
-  Stream<Position?> defaultPositionStreamSource() {
-    final streamController = StreamController<Position?>();
+  Stream<LocationData?> defaultPositionStreamSource() {
+    final streamController = StreamController<LocationData?>();
     Future.microtask(() async {
       try {
-        LocationPermission permission = await Geolocator.checkPermission();
-        if (permission == LocationPermission.denied) {
+        final location = Location();
+        PermissionStatus permission = await location.hasPermission();
+        if (permission == PermissionStatus.denied) {
           streamController.sink
               .addError(const lm.PermissionRequestingException());
-          permission = await Geolocator.requestPermission();
+          permission = await location.requestPermission();
         }
         switch (permission) {
-          case LocationPermission.denied:
-          case LocationPermission.deniedForever:
+          case PermissionStatus.denied:
+          case PermissionStatus.deniedForever:
             streamController.sink
                 .addError(const lm.PermissionDeniedException());
             break;
-          case LocationPermission.whileInUse:
-          case LocationPermission.always:
+          case PermissionStatus.grantedLimited:
+          case PermissionStatus.granted:
             try {
-              final lastKnown = await Geolocator.getLastKnownPosition();
-              if (lastKnown != null) {
-                streamController.sink.add(lastKnown);
-              }
+              final lastKnown = await location.getLocation();
+              streamController.sink.add(lastKnown);
             } catch (_) {}
-            streamController.sink.addStream(Geolocator.getPositionStream());
-            break;
-          case LocationPermission.unableToDetermine:
+            streamController.sink.addStream(location.onLocationChanged);
             break;
         }
-      } on PermissionDefinitionsNotFoundException {
+      } catch (_) {
         streamController.sink.addError(const IncorrectSetupException());
       }
     });
