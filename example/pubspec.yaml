@@ -5,14 +5,13 @@ publish_to: none
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.5 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 dependencies:
-  cupertino_icons: ^1.0.5
   flutter:
     sdk: flutter
-  flutter_compass: any
-  flutter_joystick: ^0.0.3
+  flutter_joystick: ^0.0.4
   flutter_map: any
   flutter_map_location_marker:
     path: ../
@@ -25,5 +24,4 @@ dev_dependencies:
   lint: any
 
 flutter:
-
   uses-material-design: true

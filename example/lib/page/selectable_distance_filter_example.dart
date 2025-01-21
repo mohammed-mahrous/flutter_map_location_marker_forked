@@ -14,22 +14,23 @@ class SelectableDistanceFilterExample extends StatefulWidget {
 
 class _SelectableDistanceFilterExampleState
     extends State<SelectableDistanceFilterExample> {
-  static const distanceFilters = [0, 5, 10, 30, 50];
+  static const _distanceFilters = [0, 5, 10, 30, 50];
   int _selectedIndex = 0;
 
-  late StreamController<LocationMarkerPosition?> positionStream;
-  late StreamSubscription<LocationMarkerPosition?> streamSubscription;
+  late final StreamController<LocationMarkerPosition?> _positionStream;
+  late StreamSubscription<LocationMarkerPosition?> _streamSubscription;
 
   @override
   void initState() {
     super.initState();
-    positionStream = StreamController();
+    _positionStream = StreamController();
     _subscriptPositionStream();
   }
 
   @override
   void dispose() {
-    positionStream.close();
+    _positionStream.close();
+    _streamSubscription.cancel();
     super.dispose();
   }
 
@@ -40,22 +41,21 @@ class _SelectableDistanceFilterExampleState
         title: const Text('Selectable Distance Filter Example'),
       ),
       body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(0, 0),
-          zoom: 1,
+        options: const MapOptions(
+          initialCenter: LatLng(0, 0),
+          initialZoom: 1,
           minZoom: 0,
           maxZoom: 19,
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: const ['a', 'b', 'c'],
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName:
                 'net.tlserver6y.flutter_map_location_marker.example',
             maxZoom: 19,
           ),
           CurrentLocationLayer(
-            positionStream: positionStream.stream,
+            positionStream: _positionStream.stream,
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -68,16 +68,16 @@ class _SelectableDistanceFilterExampleState
                   const Text("Distance Filter:"),
                   ToggleButtons(
                     isSelected: List.generate(
-                      distanceFilters.length,
+                      _distanceFilters.length,
                       (index) => index == _selectedIndex,
                       growable: false,
                     ),
                     onPressed: (index) {
                       setState(() => _selectedIndex = index);
-                      streamSubscription.cancel();
+                      _streamSubscription.cancel();
                       _subscriptPositionStream();
                     },
-                    children: distanceFilters
+                    children: _distanceFilters
                         .map((distance) => Text(distance.toString()))
                         .toList(growable: false),
                   ),
@@ -91,17 +91,17 @@ class _SelectableDistanceFilterExampleState
   }
 
   void _subscriptPositionStream() {
-    streamSubscription = const LocationMarkerDataStreamFactory()
+    _streamSubscription = const LocationMarkerDataStreamFactory()
         .fromGeolocatorPositionStream(
       stream: Geolocator.getPositionStream(
         locationSettings: LocationSettings(
-          distanceFilter: distanceFilters[_selectedIndex],
+          distanceFilter: _distanceFilters[_selectedIndex],
         ),
       ),
     )
         .listen(
       (position) {
-        positionStream.add(position);
+        _positionStream.add(position);
       },
     );
   }

@@ -11,12 +11,12 @@ class AnimationDebugger extends StatefulWidget {
 }
 
 class _AnimationDebuggerState extends State<AnimationDebugger> {
-  LocationMarkerPosition locationMarkerPosition = LocationMarkerPosition(
+  LocationMarkerPosition _locationMarkerPosition = const LocationMarkerPosition(
     latitude: 0,
     longitude: 0,
     accuracy: 20000,
   );
-  LocationMarkerHeading locationMarkerHeading = LocationMarkerHeading(
+  LocationMarkerHeading _locationMarkerHeading = const LocationMarkerHeading(
     heading: 0,
     accuracy: 1,
   );
@@ -28,70 +28,69 @@ class _AnimationDebuggerState extends State<AnimationDebugger> {
         title: const Text('Animation Debugger'),
       ),
       body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(0, 0),
-          zoom: 8,
+        options: const MapOptions(
+          initialCenter: LatLng(0, 0),
+          initialZoom: 8,
           minZoom: 0,
           maxZoom: 19,
         ),
-        nonRotatedChildren: [
-          Positioned(
-            right: 20,
-            bottom: 20,
-            child: Column(
-              children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    final random = Random();
-                    setState(() {
-                      locationMarkerPosition = LocationMarkerPosition(
-                        latitude: random.nextDouble() - 0.5,
-                        longitude: random.nextDouble() - 0.5,
-                        accuracy: random.nextDouble() * 80000 + 20000,
-                      );
-                    });
-                  },
-                  heroTag: null,
-                  child: const Icon(
-                    Icons.my_location,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    final random = Random();
-                    setState(() {
-                      locationMarkerHeading = LocationMarkerHeading(
-                        heading: random.nextDouble() * pi * 2,
-                        accuracy: random.nextDouble() * 0.8 + 0.2,
-                      );
-                    });
-                  },
-                  heroTag: null,
-                  child: const Icon(
-                    Icons.navigation,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
         children: [
           TileLayer(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: const ['a', 'b', 'c'],
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName:
                 'net.tlserver6y.flutter_map_location_marker.example',
             maxZoom: 19,
           ),
           AnimatedLocationMarkerLayer(
-            position: locationMarkerPosition,
-            heading: locationMarkerHeading,
+            position: _locationMarkerPosition,
+            heading: _locationMarkerHeading,
             moveAnimationDuration: const Duration(seconds: 2),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      final random = Random();
+                      setState(() {
+                        _locationMarkerPosition = LocationMarkerPosition(
+                          latitude: random.nextDouble() - 0.5,
+                          longitude: random.nextDouble() - 0.5,
+                          accuracy: random.nextDouble() * 80000 + 20000,
+                        );
+                      });
+                    },
+                    heroTag: null,
+                    child: const Icon(
+                      Icons.my_location,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      final random = Random();
+                      setState(() {
+                        _locationMarkerHeading = LocationMarkerHeading(
+                          heading: random.nextDouble() * pi * 2,
+                          accuracy: random.nextDouble() * 0.8 + 0.2,
+                        );
+                      });
+                    },
+                    heroTag: null,
+                    child: const Icon(
+                      Icons.navigation,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

@@ -15,7 +15,7 @@ class LocationMarkerPosition {
   final double accuracy;
 
   /// Create a LocationMarkerPosition.
-  LocationMarkerPosition({
+  const LocationMarkerPosition({
     required this.latitude,
     required this.longitude,
     required this.accuracy,
@@ -25,12 +25,10 @@ class LocationMarkerPosition {
   LatLng get latLng => LatLng(latitude, longitude);
 
   @override
-  String toString() {
-    return 'LocationMarkerPosition('
-        'latitude: $latitude, '
-        'longitude: $longitude, '
-        'accuracy: $accuracy)';
-  }
+  String toString() => 'LocationMarkerPosition('
+      'latitude: $latitude, '
+      'longitude: $longitude, '
+      'accuracy: $accuracy)';
 }
 
 /// A angle with accuracy for marker rendering.
@@ -44,15 +42,13 @@ class LocationMarkerHeading {
   final double accuracy;
 
   /// Create a LocationMarkerHeading.
-  LocationMarkerHeading({
+  const LocationMarkerHeading({
     required this.heading,
     required this.accuracy,
   });
 
   @override
-  String toString() {
-    return 'LocationMarkerHeading('
-        'heading: $heading, '
-        'accuracy: $accuracy)';
-  }
+  String toString() => 'LocationMarkerHeading('
+      'heading: $heading, '
+      'accuracy: $accuracy)';
 }
