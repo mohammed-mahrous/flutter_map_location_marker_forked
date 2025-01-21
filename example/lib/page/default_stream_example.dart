@@ -7,7 +7,7 @@ import 'package:latlong2/latlong.dart';
 
 // If you want to act with original stream, also see the commented codes.
 /*
-import 'package:flutter_compass/flutter_compass.dart';
+import 'package:flutter_rotation_sensor/flutter_rotation_sensor.dart';
 import 'package:geolocator/geolocator.dart';
 */
 
@@ -22,7 +22,7 @@ class _DefaultStreamExampleState extends State<DefaultStreamExample> {
 
 /*
   late final Stream<Position?> _geolocatorStream;
-  late final Stream<CompassEvent?> _compassStream;
+  late final Stream<OrientationEvent> _rotationSensorStream;
 */
 
   @override
@@ -31,21 +31,36 @@ class _DefaultStreamExampleState extends State<DefaultStreamExample> {
     const factory = LocationMarkerDataStreamFactory();
     _positionStream =
         factory.fromGeolocatorPositionStream().asBroadcastStream();
-    _headingStream = factory.fromCompassHeadingStream().asBroadcastStream();
+    _headingStream = factory.fromRotationSensorHeadingStream().asBroadcastStream();
 
     // Get streams with default settings.
-/*
-    _geolocatorStream = factory.defaultPositionStreamSource().asBroadcastStream();
-    _compassStream = factory.defaultHeadingStreamSource().asBroadcastStream();
-*/
+/*    _geolocatorStream = factory.defaultPositionStreamSource().asBroadcastStream();
+    _rotationSensorStream = factory.defaultHeadingStreamSource().asBroadcastStream();*/
 
     // Or get streams with your own settings.
 /*
     _geolocatorStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(),
     ).asBroadcastStream();
-    _compassStream = FlutterCompass.events!.asBroadcastStream();
+    _rotationSensorStream = RotationSensor.orientationStream.asBroadcastStream();
 */
+
+    // Or even use other library.
+/*
+    _flutterCompassStream = FlutterCompass.events!.asBroadcastStream();
+*/
+
+    // Use helper function in factory to cast the streams.
+/*
+    const factory = LocationMarkerDataStreamFactory();
+    _positionStream = factory.fromGeolocatorPositionStream(
+      stream: _geolocatorStream,
+    );
+    _headingStream = factory.fromRotationSensorHeadingStream(
+      stream: _rotationSensorStream,
+    );
+*/
+
   }
 
   @override
@@ -62,17 +77,15 @@ class _DefaultStreamExampleState extends State<DefaultStreamExample> {
           Expanded(
             flex: 2,
             child: FlutterMap(
-              options: MapOptions(
-                center: LatLng(0, 0),
-                zoom: 1,
+              options: const MapOptions(
+                initialCenter: LatLng(0, 0),
+                initialZoom: 1,
                 minZoom: 0,
                 maxZoom: 19,
               ),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: const ['a', 'b', 'c'],
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName:
                       'net.tlserver6y.flutter_map_location_marker.example',
                   maxZoom: 19,
@@ -80,16 +93,6 @@ class _DefaultStreamExampleState extends State<DefaultStreamExample> {
                 CurrentLocationLayer(
                   positionStream: _positionStream,
                   headingStream: _headingStream,
-
-                  // Use helper function in factory to cast the streams.
-/*
-                  positionStream: factory.fromGeolocatorPositionStream(
-                    stream: _geolocatorStream,
-                  ),
-                  headingStream: factory.fromCompassHeadingStream(
-                    stream: _compassStream,
-                  ),
-*/
                 ),
               ],
             ),
@@ -200,7 +203,7 @@ class _PulseAnimationBoxState extends State<PulseAnimationBox>
   @override
   void didUpdateWidget(PulseAnimationBox oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.stream != widget.stream){
+    if (oldWidget.stream != widget.stream) {
       _subscription?.cancel();
       _subscript();
     }

@@ -1,3 +1,148 @@
+## [10.0.0-beta.0] - RotationSensor as heading provider
+
+* __BRAKING CHANGE__ Remove flutter_compass dependency, replaced
+  by [flutter_rotation_sensor](https://pub.dev/packages/flutter_rotation_sensor)
+
+## [9.1.1] - Fix Bug
+
+* Remove debug prints (#128)
+
+## [9.1.0] - Improve Behavior
+
+* Improve performance by reducing unnecessary rebuilt (#123)
+* Add [LocationMarkerStyle.alignment](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/LocationMarkerStyle/markerAlignment.html) option (#124)
+
+Thank to codeOfJannik
+
+## [9.0.0] - Migrate to Flutter Map v7
+
+* Migrate to `flutter_map` v7
+
+## [8.1.0] - Improve Behavior
+
+* Export [IncorrectSetupException](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/IncorrectSetupException-class.html),
+  [PermissionDeniedException](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/PermissionDeniedException-class.html),
+  [PermissionRequestingException](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/PermissionRequestingException-class.html),
+  [ServiceDisabledException](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/ServiceDisabledException-class.html) (#111)
+
+Thank to mishkov
+
+## [8.0.8] - Fix Bug
+
+* Fix widget reusability to allow multiple initializations (#109)
+
+## [8.0.7] - Fix Bug
+
+* Fix error of Geolocator.getLastKnownPosition() on web (#108)
+
+## [8.0.6] - Fix Bug
+
+* Fix unnecessary re-subscription on widget update (#106)
+* Fix the use of unmounted widget's context (#103, #104)
+* Update dependencies
+
+Thank to stefcon & pgebert
+
+## [8.0.5] - Fix Bug
+
+* Fix the use of unmounted widget's context (#103)
+* Fix repeated requests to enable location service (#77, #102)
+* Fix error of Geolocator.getServiceStatusStream() on web (#101)
+* Update dependencies
+ 
+## [8.0.4] - Fix Bug
+
+* Fix error about AnimationController be disposed more than once (#96)
+
+## [8.0.3] - Improve Behavior
+
+* Combine [followScreenPoint](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  and [followScreenPointOffset](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [focalPoint](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/focalPoint.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+  class
+* Rename [followCurrentLocationStream](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignPositionStream](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/alignPositionStream.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [followOnLocationUpdate](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignPositionOnUpdate](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/alignPositionOnUpdate.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [followAnimationDuration](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignPositionAnimationDuration](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/alignPositionAnimationDuration.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [followAnimationCurve](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignPositionAnimationCurve](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/alignPositionAnimationCurve.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [turnHeadingUpLocationStream](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignDirectionStream](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [turnOnHeadingUpdate](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignDirectionOnUpdate](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [turnAnimationDuration](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignDirectionAnimationDuration](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/alignDirectionAnimationDuration.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Rename [turnAnimationCurve](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/CurrentLocationLayer.html)
+  to [alignDirectionAnimationCurve](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer/alignDirectionAnimationCurve.html)
+  in [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/8.0.3/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Update dependencies
+* Update documentation
+
+## [8.0.2] - Fix Bug
+
+* Fix LateInitializationError when requesting permission (#92)
+
+## [8.0.1] - Fix Bug
+
+* Fix performance issue (#91)
+* Update dependencies
+
+## [8.0.0] - Migrate to Flutter Map v6
+
+* Migrate to `flutter_map` v6
+* Shorten default heading sector animation duration
+
+Thank to bramp
+
+## [7.0.5] - Update Dependencies
+
+* Update dependencies
+
+Thank to dpatrongomez
+
+## [7.0.4] - Improve Behavior
+
+* Add parameter `requestPermissionCallback` to [LocationMarkerDataStreamFactory.defaultPositionStreamSource()](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/LocationMarkerDataStreamFactory/defaultPositionStreamSource.html) (#78)
+* Fix indicators
+
+Thank to SalihCanBinboga
+
+## [7.0.2] - Fix Bug
+
+* Fix error with null heading (#74)
+
+Thank to LeonTenorio
+
+## [7.0.1] - Fix Bug
+
+* Fix heading accuracy (#72)
+
+## [7.0.0] - Migrate to Flutter Map v5
+
+* Migrate to `flutter_map` v5
+
+## [6.0.0] - Migrate to Flutter Map v4
+
+* Migrate to `flutter_map` v4
+
+## [5.3.0] - Improve Behavior
+
+* Reduce unnecessary widget rebuild of
+  [CurrentLocationLayer](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/CurrentLocationLayer-class.html)
+* Add customize-able indicators feature,
+  see [CurrentLocationLayer.indicators](https://pub.dev/documentation/flutter_map_location_marker/latest/flutter_map_location_marker/CurrentLocationLayer/indicators.html)
+* Update example project
+
 ## [5.2.1] - Fix Bug
 
 * Fix web supporting (#52)

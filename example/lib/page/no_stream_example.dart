@@ -15,14 +15,14 @@ class NoStreamExample extends StatefulWidget {
 }
 
 class _NoStreamExampleState extends State<NoStreamExample> {
-  LocationMarkerPosition _currentPosition = LocationMarkerPosition(
+  LocationMarkerPosition _currentPosition = const LocationMarkerPosition(
     latitude: 0,
     longitude: 0,
     accuracy: 0,
   );
-  LocationMarkerHeading _currentHeading = LocationMarkerHeading(
+  LocationMarkerHeading _currentHeading = const LocationMarkerHeading(
     heading: 0,
-    accuracy: 0.2,
+    accuracy: pi * 0.2,
   );
 
   @override
@@ -34,18 +34,16 @@ class _NoStreamExampleState extends State<NoStreamExample> {
       body: Stack(
         children: [
           FlutterMap(
-            options: MapOptions(
-              center: LatLng(0, 0),
-              zoom: 1,
+            options: const MapOptions(
+              initialCenter: LatLng(0, 0),
+              initialZoom: 1,
               minZoom: 0,
               maxZoom: 19,
             ),
             // ignore: sort_child_properties_last
             children: [
               TileLayer(
-                urlTemplate:
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: const ['a', 'b', 'c'],
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName:
                     'net.tlserver6y.flutter_map_location_marker.example',
                 maxZoom: 19,
