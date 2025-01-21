@@ -4,11 +4,9 @@ import 'page/custom_stream_example.dart';
 import 'page/customize_marker_example.dart';
 import 'page/default_stream_example.dart';
 import 'page/follow_fab_example.dart';
-import 'page/geolocator_settings_example.dart';
 import 'page/minimum_example.dart';
 import 'page/navigation_example.dart';
 import 'page/no_stream_example.dart';
-import 'page/selectable_distance_filter_example.dart';
 
 // import 'page/animation_debugger.dart';
 // import 'page/stream_debugger.dart';
@@ -82,30 +80,30 @@ class Home extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            title: const Text('Geolocator Settings Example'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      GeolocatorSettingsExample(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('Selectable Distance Filter Example'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      SelectableDistanceFilterExample(),
-                ),
-              );
-            },
-          ),
+          // ListTile(
+          //   title: const Text('Geolocator Settings Example'),
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (BuildContext context) =>
+          //             GeolocatorSettingsExample(),
+          //       ),
+          //     );
+          //   },
+          // ),
+          // ListTile(
+          //   title: const Text('Selectable Distance Filter Example'),
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (BuildContext context) =>
+          //             SelectableDistanceFilterExample(),
+          //       ),
+          //     );
+          //   },
+          // ),
           ListTile(
             title: const Text('Custom Stream Example'),
             onTap: () {
