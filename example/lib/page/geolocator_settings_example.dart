@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 class GeolocatorSettingsExample extends StatelessWidget {
   final _positionStream =
       const LocationMarkerDataStreamFactory().fromGeolocatorPositionStream(
-    stream: Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.medium,
-        distanceFilter: 50,
-        timeLimit: Duration(minutes: 1),
-      ),
-    ),
+    stream: Location().onLocationChanged,
   );
 
   @override

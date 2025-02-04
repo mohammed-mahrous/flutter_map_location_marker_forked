@@ -31,7 +31,8 @@ class _DefaultStreamExampleState extends State<DefaultStreamExample> {
     const factory = LocationMarkerDataStreamFactory();
     _positionStream =
         factory.fromGeolocatorPositionStream().asBroadcastStream();
-    _headingStream = factory.fromRotationSensorHeadingStream().asBroadcastStream();
+    _headingStream =
+        factory.fromRotationSensorHeadingStream().asBroadcastStream();
 
     // Get streams with default settings.
 /*    _geolocatorStream = factory.defaultPositionStreamSource().asBroadcastStream();
@@ -60,14 +61,10 @@ class _DefaultStreamExampleState extends State<DefaultStreamExample> {
       stream: _rotationSensorStream,
     );
 */
-
   }
 
   @override
   Widget build(BuildContext context) {
-/*
-    const factory = LocationMarkerDataStreamFactory();
-*/
     return Scaffold(
       appBar: AppBar(
         title: const Text('Default Stream Example'),

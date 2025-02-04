@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../data.dart';
+import '../data/data.dart';
 
 /// A [CustomPainter] that draws a sector for displaying the device's heading.
 class HeadingSector extends CustomPainter {
@@ -48,9 +48,8 @@ class HeadingSector extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(HeadingSector oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.heading != heading ||
-        oldDelegate.accuracy != accuracy;
-  }
+  bool shouldRepaint(HeadingSector oldDelegate) =>
+      oldDelegate.color != color ||
+      oldDelegate.heading != heading ||
+      oldDelegate.accuracy != accuracy;
 }

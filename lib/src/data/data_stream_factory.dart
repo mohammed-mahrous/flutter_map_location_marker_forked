@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_rotation_sensor/flutter_rotation_sensor.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import '../exceptions/incorrect_setup_exception.dart';
 import '../exceptions/permission_denied_exception.dart' as lm;
@@ -13,7 +13,7 @@ import '../widgets/current_location_layer.dart';
 import 'data.dart';
 
 /// Signature for callbacks of permission request.
-typedef RequestPermissionCallback = FutureOr<LocationPermission> Function();
+typedef RequestPermissionCallback = FutureOr<PermissionStatus> Function();
 
 /// Helper class for converting the data stream which provide data in required
 /// format from stream created by some existing plugin.
@@ -24,50 +24,50 @@ class LocationMarkerDataStreamFactory {
   /// Cast to a position stream from
   /// [geolocator](https://pub.dev/packages/geolocator) stream.
   Stream<LocationMarkerPosition?> fromGeolocatorPositionStream({
-    Stream<Position?>? stream,
+    Stream<LocationData?>? stream,
   }) =>
       (stream ?? defaultPositionStreamSource()).map(
         (position) => position != null
             ? LocationMarkerPosition(
-                latitude: position.latitude,
-                longitude: position.longitude,
-                accuracy: position.accuracy,
+                latitude: position.latitude!,
+                longitude: position.longitude!,
+                accuracy: position.accuracy!,
               )
             : null,
       );
 
   /// Create a position stream which is used as default value of
   /// [CurrentLocationLayer.positionStream].
-  Stream<Position?> defaultPositionStreamSource({
-    RequestPermissionCallback? requestPermissionCallback =
-        Geolocator.requestPermission,
+  Stream<LocationData?> defaultPositionStreamSource({
+    RequestPermissionCallback? requestPermissionCallback,
   }) {
+    requestPermissionCallback ??= Location().requestPermission;
     final cancelFunctions = <AsyncCallback>[];
-    final streamController = StreamController<Position?>.broadcast();
+    final streamController = StreamController<LocationData?>.broadcast();
+    final location = Location();
     streamController
       ..onListen = () async {
         try {
-          var permission = await Geolocator.checkPermission();
-          if (permission == LocationPermission.denied &&
+          var permission = await location.hasPermission();
+          if (permission == PermissionStatus.denied &&
               requestPermissionCallback != null) {
             streamController.sink
                 .addError(const lm.PermissionRequestingException());
             permission = await requestPermissionCallback();
           }
           switch (permission) {
-            case LocationPermission.denied:
-            case LocationPermission.deniedForever:
+            case PermissionStatus.denied:
+            case PermissionStatus.deniedForever:
               if (streamController.isClosed) {
                 break;
               }
               streamController.sink
                   .addError(const lm.PermissionDeniedException());
               await streamController.close();
-            case LocationPermission.whileInUse:
-            case LocationPermission.always:
+            case PermissionStatus.grantedLimited:
+            case PermissionStatus.granted:
               try {
-                final serviceEnabled =
-                    await Geolocator.isLocationServiceEnabled();
+                final serviceEnabled = await location.serviceEnabled();
                 if (streamController.isClosed) {
                   break;
                 }
@@ -80,9 +80,11 @@ class LocationMarkerDataStreamFactory {
                 // The concept of location service doesn't exist on the web
                 // platform
                 if (!kIsWeb) {
-                  final subscription = Geolocator.getServiceStatusStream()
+                  final subscription = location
+                      .serviceEnabled()
+                      .asStream()
                       .listen((serviceStatus) {
-                    if (serviceStatus == ServiceStatus.enabled) {
+                    if (serviceStatus) {
                       streamController.sink.add(null);
                     } else {
                       streamController.sink
@@ -95,20 +97,17 @@ class LocationMarkerDataStreamFactory {
               try {
                 // getLastKnownPosition is not supported on the web platform
                 if (!kIsWeb) {
-                  final lastKnown = await Geolocator.getLastKnownPosition();
+                  final lastKnown = await location.onLocationChanged.last;
                   if (streamController.isClosed) {
                     break;
                   }
-                  if (lastKnown != null) {
-                    streamController.sink.add(lastKnown);
-                  }
+                  streamController.sink.add(lastKnown);
                 }
               } on Exception catch (_) {}
               try {
-                final serviceEnabled =
-                    await Geolocator.isLocationServiceEnabled();
+                final serviceEnabled = await location.serviceEnabled();
                 if (serviceEnabled) {
-                  final position = await Geolocator.getCurrentPosition();
+                  final position = await location.getLocation();
                   if (streamController.isClosed) {
                     break;
                   }
@@ -116,14 +115,12 @@ class LocationMarkerDataStreamFactory {
                 }
               } on Exception catch (_) {}
               final subscription =
-                  Geolocator.getPositionStream().listen((position) {
+                  location.onLocationChanged.listen((position) {
                 streamController.sink.add(position);
               });
               cancelFunctions.add(subscription.cancel);
-            case LocationPermission.unableToDetermine:
-              break;
           }
-        } on PermissionDefinitionsNotFoundException {
+        } catch (e) {
           streamController.sink.addError(const IncorrectSetupException());
         }
       }
